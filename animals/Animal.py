@@ -1,4 +1,5 @@
-from Organism import Organism, Point
+from Organism import Organism
+from Point import Point
 from World import World
 
 

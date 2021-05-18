@@ -1,14 +1,14 @@
-from World import World
-
-
-class Point:
-    x: int
-    y: int
+import World
+from Point import Point
 
 
 class Organism:
     def __init__(
-        self, strength: int, initiative: int, position: Point, world_ref: World
+        self,
+        strength: int,
+        initiative: int,
+        position: Point,
+        world_ref: World.World,
     ) -> None:
         self.strength = strength
         self.initiative = initiative
