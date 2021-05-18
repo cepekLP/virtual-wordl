@@ -1,5 +1,5 @@
-from Organism import Organism, Point
-
+from Organism import Organism
+from Point import Point
 from World import World
 
 
@@ -7,11 +7,10 @@ class Plant(Organism):
     def __init__(
         self,
         strength: int,
-        initiative: int,
         position: Point,
         world_ref: World,
     ) -> None:
-        super().__init__(strength, initiative, position, world_ref)
+        super().__init__(strength, 0, position, world_ref)
 
     def action(self):
         pass
