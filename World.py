@@ -30,5 +30,8 @@ class World:
 
         return None
 
+    def add_organism(self, organism: Org.Organism) -> None:
+        pass
+
     def remove_organism(self, organism: Org.Organism) -> None:
         pass

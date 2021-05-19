@@ -1,6 +1,8 @@
+import random
+from typing import Any, Union
+
 import World
 from Point import Point
-from typing import Any
 
 
 class Organism:
@@ -45,6 +47,33 @@ class Organism:
 
     def run_away(self) -> bool:
         return False
+
+    def find_free_pos(self, position: Point) -> Union[Point, None]:
+        positions = []
+        for i in range(-1, 2):
+            for j in range(-1, 2):
+                positions.append(Point(i, j))
+
+        while True:
+            temp = random.randrange(len(positions))
+            position_change = positions[temp]
+            positions.pop(temp)
+            next_position = position
+            next_position.x += position_change.x
+            next_position.y += position_change.y
+            if (
+                next_position.x >= 0
+                and next_position.x < self.world.get_width()
+                and next_position.y >= 0
+                and next_position.y < self.world.get_height()
+                and self.world.check_collision(next_position) is None
+            ):
+                break
+
+        if self.world.check_collision(next_position) is not None:
+            return next_position
+        else:
+            return None
 
     def check_type(self, attacker: Any) -> bool:
         return False
