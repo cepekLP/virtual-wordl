@@ -22,6 +22,15 @@ class Organism:
     def get_strength(self) -> int:
         return self.strength
 
+    def get_initiative(self) -> int:
+        return self.initiative
+
+    def get_position(self) -> Point:
+        return self.position
+
+    def draw(self) -> str:
+        return ""
+
     def action(self) -> None:
         pass
 
