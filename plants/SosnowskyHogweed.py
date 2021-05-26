@@ -1,12 +1,15 @@
 import random
+from typing import TYPE_CHECKING
 
 from Plant import Plant, PLANT_DELAY, PLANT_CHANCE_TO_MULTIPLY
 from Point import Point
-from World import World
+
+if TYPE_CHECKING:
+    from World import World
 
 
 class SosnowskyHogweed(Plant):
-    def __init__(self, position: Point, world_ref: World):
+    def __init__(self, position: Point, world_ref: "World"):
         super().__init__(11, position, world_ref)
 
     def action(self):

@@ -1,8 +1,10 @@
 import random
-from typing import Any, Union
+from typing import Any, Union, TYPE_CHECKING
 
-import World
 from Point import Point
+
+if TYPE_CHECKING:
+    from World import World
 
 
 class Organism:
@@ -11,12 +13,12 @@ class Organism:
         strength: int,
         initiative: int,
         position: Point,
-        world_ref: World.World,
+        world_ref: "World",
     ) -> None:
-        self.strength = strength
-        self.initiative = initiative
-        self.position = position
-        self.world = world_ref
+        self.strength: int = strength
+        self.initiative: int = initiative
+        self.position: Point = position
+        self.world: "World" = world_ref
         self.delay: int = 1
 
     def get_strength(self) -> int:

@@ -1,10 +1,11 @@
 import random
-
-from typing import Union
+from typing import Union, TYPE_CHECKING
 
 from Organism import Organism
 from Point import Point
-from World import World
+
+if TYPE_CHECKING:
+    from World import World
 
 ANIMAL_MULTIPLY_DELAY = 5
 
@@ -15,7 +16,7 @@ class Animal(Organism):
         strength: int,
         initiative: int,
         position: Point,
-        world_ref: World,
+        world_ref: "World",
     ) -> None:
         super().__init__(strength, initiative, position, world_ref)
 

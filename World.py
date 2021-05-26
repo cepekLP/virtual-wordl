@@ -1,9 +1,24 @@
+import Organism as Org
+import random
 import numpy as np
 from typing import List, Union
 
-import Organism as Org
+
 from Point import Point
-from plants.Plant import Plant
+from Plant import Plant
+
+from animals.Antelope import Antelope
+from animals.CyberSheep import CyberSheep
+from animals.Fox import Fox
+from animals.Sheep import Sheep
+from animals.Turtle import Turtle
+from animals.Wolf import Wolf
+
+from plants.Dandelion import Dandelion
+from plants.DeadlyNightshade import DeadlyNightshade
+from plants.Grass import Grass
+from plants.Guarana import Guarana
+from plants.SosnowskyHogweed import SosnowskyHogweed
 
 
 class World:
@@ -60,3 +75,66 @@ class World:
             self.organisms.remove(organism)
         except ValueError:
             print("There is no that organism")
+
+    def generate_organisms(
+        self,
+        organisms_number: int,
+        antelope_chance: int = 50,
+        cyber_sheep_chance: int = 10,
+        dandelion_chance: int = 25,
+        deadly_nightshade_chance: int = 5,
+        fox_chance: int = 25,
+        grass_chance: int = 100,
+        guarana_chance: int = 50,
+        sheep_chance: int = 75,
+        sosnowsky_hogweed_chance: int = 5,
+        turtle_chance: int = 50,
+        wolf_chance: int = 10,
+    ) -> None:
+        cyber_sheep_chance += antelope_chance
+        dandelion_chance += cyber_sheep_chance
+        deadly_nightshade_chance += dandelion_chance
+        fox_chance += deadly_nightshade_chance
+        grass_chance += fox_chance
+        guarana_chance += grass_chance
+        sheep_chance += guarana_chance
+        sosnowsky_hogweed_chance += sheep_chance
+        turtle_chance += sosnowsky_hogweed_chance
+        wolf_chance += turtle_chance
+
+        position = Point(0, 0)
+
+        # add human
+
+        for i in range(organisms_number - 1):
+            rand = random.randrange(wolf_chance)
+
+            while True:
+                position.x = random.randrange(self.width)
+                position.y = random.randrange(self.height)
+
+                if self.check_collision(position) is None:
+                    break
+
+            if rand < antelope_chance:
+                self.add_organism(Antelope(position, self))
+            elif rand < cyber_sheep_chance:
+                self.add_organism(CyberSheep(position, self))
+            elif rand < dandelion_chance:
+                self.add_organism(Dandelion(position, self))
+            elif rand < deadly_nightshade_chance:
+                self.add_organism(DeadlyNightshade(position, self))
+            elif rand < fox_chance:
+                self.add_organism(Fox(position, self))
+            elif rand < grass_chance:
+                self.add_organism(Grass(position, self))
+            elif rand < guarana_chance:
+                self.add_organism(Guarana(position, self))
+            elif rand < sheep_chance:
+                self.add_organism(Sheep(position, self))
+            elif rand < sosnowsky_hogweed_chance:
+                self.add_organism(SosnowskyHogweed(position, self))
+            elif rand < turtle_chance:
+                self.add_organism(Turtle(position, self))
+            elif rand < wolf_chance:
+                self.add_organism(Wolf(position, self))

@@ -1,15 +1,15 @@
 import random
-
-from typing import Union
+from typing import TYPE_CHECKING
 
 from Animal import Animal
 from Point import Point
-from World import World
-from Organism import Organism
+
+if TYPE_CHECKING:
+    from World import World
 
 
 class Turtle(Animal):
-    def __init__(self, position: Point, world_ref: World):
+    def __init__(self, position: Point, world_ref: "World"):
         super().__init__(2, 1, position, world_ref)
 
     def action(self):
@@ -34,9 +34,7 @@ class Turtle(Animal):
             elif next_position.y < 0:
                 next_position.y += 2
 
-            organism: Union[Organism, None] = self.world.check_collision(
-                next_position
-            )
+            organism = self.world.check_collision(next_position)
 
             if organism is not None:
                 if self.collision(organism) == 1:
@@ -46,7 +44,7 @@ class Turtle(Animal):
             self.delay -= 1
 
     def multiply(self) -> None:
-        free_position: Union[Point, None] = self.find_free_pos(self.position)
+        free_position = self.find_free_pos(self.position)
 
         if free_position is not None:
             self.world.add_organism(Turtle(free_position, self.world))
