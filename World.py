@@ -102,13 +102,13 @@ class World:
         turtle_chance += sosnowsky_hogweed_chance
         wolf_chance += turtle_chance
 
-        position = Point(0, 0)
+        # position = Point(0, 0)
 
         # add human
 
         for i in range(organisms_number - 1):
             rand = random.randrange(wolf_chance)
-
+            position = Point(0, 0)
             while True:
                 position.x = random.randrange(self.width)
                 position.y = random.randrange(self.height)
