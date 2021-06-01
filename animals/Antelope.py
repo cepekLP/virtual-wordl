@@ -12,6 +12,9 @@ class Antelope(Animal):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(4, 4, position, world_ref)
 
+    def draw(self) -> str:
+        return "GUI/images/antelope.png"
+
     def action(self) -> None:
         position_change_x = 0
         position_change_y = 0
@@ -79,10 +82,13 @@ class Antelope(Animal):
                 and next_position.y >= 0
                 and next_position.y < self.world.get_height()
                 and self.world.check_collision(next_position) is None
-            ):
+            ) or len(positions) == 0:
                 break
 
-        if self.world.check_collision(next_position) is not None:
+        if (
+            self.world.check_collision(next_position) is not None
+            and len(positions) != 0
+        ):
             return next_position
         else:
             return None

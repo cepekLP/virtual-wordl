@@ -9,5 +9,7 @@ if TYPE_CHECKING:
 
 class DeadlyNightshade(Plant):
     def __init__(self, position: Point, world_ref: "World"):
-
         super().__init__(99, position, world_ref)
+
+    def draw(self) -> str:
+        return "GUI/images/deadlynightshade.png"

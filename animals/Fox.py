@@ -12,6 +12,9 @@ class Fox(Animal):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(3, 7, position, world_ref)
 
+    def draw(self) -> str:
+        return "GUI/images/fox.png"
+
     def action(self) -> None:
         position_change: Point = Point(0, 0)
 

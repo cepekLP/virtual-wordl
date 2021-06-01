@@ -12,6 +12,9 @@ class Dandelion(Plant):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(0, position, world_ref)
 
+    def draw(self) -> str:
+        return "GUI/images/dandelion.jpeg"
+
     def action(self) -> None:
         for i in range(3):
             if random.random() < PLANT_CHANCE_TO_MULTIPLY and self.delay == 0:

@@ -12,8 +12,11 @@ class Turtle(Animal):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(2, 1, position, world_ref)
 
+    def draw(self) -> str:
+        return "GUI/images/turtle.png"
+
     def action(self):
-        if random.Random < 0.25:
+        if random.random() < 0.25:
             position_change: Point = Point(0, 0)
 
             while position_change.x == 0 and position_change.y == 0:

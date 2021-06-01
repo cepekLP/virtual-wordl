@@ -11,6 +11,9 @@ class Wolf(Animal):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(9, 5, position, world_ref)
 
+    def draw(self) -> str:
+        return "GUI/images/wolf.png"
+
     def multiply(self) -> None:
         free_position = self.find_free_pos(self.position)
 

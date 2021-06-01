@@ -10,3 +10,6 @@ if TYPE_CHECKING:
 class Guarana(Plant):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(0, position, world_ref)
+
+    def draw(self) -> str:
+        return "GUI/images/guarana.jpeg"

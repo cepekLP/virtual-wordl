@@ -29,7 +29,7 @@ class Game(QWidget):
 
                 # button.setStyleSheet(
                 #    "border-image: url(GUI/images/turtle.png) \
-                #    0 0 0 0 stretch stretch"
+                #     0 0 0 0 stretch stretch"
                 # )
                 self.layout.addWidget(button, j, i)
             self.world_tiles.append(h_list)

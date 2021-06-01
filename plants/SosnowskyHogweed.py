@@ -12,6 +12,9 @@ class SosnowskyHogweed(Plant):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(11, position, world_ref)
 
+    def draw(self) -> str:
+        return "GUI/images/sosnowkyhogweed.jpg"
+
     def action(self):
         for i in range(-1, 2):
             for j in range(-1, 2):

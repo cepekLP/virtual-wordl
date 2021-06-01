@@ -1,10 +1,15 @@
 import sys
 
+from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedLayout, QWidget
 
 from GUI.Menu import Menu
 from GUI.Game import Game
+
+from Point import Point
+
 from World import World
+from Human import Human
 
 
 class MainWindow(QMainWindow):
@@ -16,6 +21,8 @@ class MainWindow(QMainWindow):
         self.organisms_num: int = 1
         self.world_width: int = 1
         self.world_height: int = 1
+        self.human: Human
+        self.world: World
 
         self.setWindowTitle("Virtual World")
         self.setFixedSize(screen_width, screen_height)
@@ -61,10 +68,21 @@ class MainWindow(QMainWindow):
             self.menu.organisms_spin.setValue(v)
 
     def start_game(self):
-        self.word = World(self.world_width, self.world_height)
         self.game.set_size(self.world_width, self.world_height)
-        self.word.generate_organisms(self.organisms_num)
+        self.world = World(self.world_width, self.world_height, self.game)
+        self.human = self.world.generate_organisms(self.organisms_num)
         self.layout.setCurrentIndex(1)
+
+    def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
+        if event.key() == QtCore.Qt.Key_W:
+            self.human.set_position_change(Point(0, -1))
+        elif event.key() == QtCore.Qt.Key_S:
+            self.human.set_position_change(Point(0, 1))
+        elif event.key() == QtCore.Qt.Key_A:
+            self.human.set_position_change(Point(-1, 0))
+        elif event.key() == QtCore.Qt.Key_D:
+            self.human.set_position_change(Point(1, 0))
+        self.world.make_round()
 
 
 if __name__ == "__main__":

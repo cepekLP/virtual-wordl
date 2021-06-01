@@ -1,11 +1,11 @@
 import Organism as Org
 import random
-import numpy as np
 from typing import List, Union
 
 
 from Point import Point
 from Plant import Plant
+from Human import Human
 
 from animals.Antelope import Antelope
 from animals.CyberSheep import CyberSheep
@@ -20,13 +20,16 @@ from plants.Grass import Grass
 from plants.Guarana import Guarana
 from plants.SosnowskyHogweed import SosnowskyHogweed
 
+from GUI.Game import Game
+
 
 class World:
-    def __init__(self, width: int, height: int) -> None:
+    def __init__(self, width: int, height: int, game: Game) -> None:
         self.width = width
         self.height = height
         self.organisms: List[Org.Organism] = []  # add correct type annotation
         self.round_number = 0
+        self.game = game
 
     def get_width(self) -> int:
         return self.width
@@ -40,19 +43,36 @@ class World:
 
         self.draw_world()
 
-    def draw_world(self) -> np.array:
-        organisms_markers = np.zeros((self.width, self.height))
+    def draw_world(self) -> None:
+        for i in range(self.height):
+            for j in range(self.width):
+                self.game.world_tiles[i][j].setStyleSheet("")
 
         for organism in self.organisms:
-            organisms_markers[organism.get_position().x][
+            self.game.world_tiles[organism.get_position().x][
                 organism.get_position().y
-            ] = organism.draw()
+            ].setStyleSheet(
+                "border-image: url("
+                + organism.draw()
+                + ") 0 0 0 0 stretch stretch"
+            )
 
-        return organisms_markers
+    # def draw_world(self) -> np.array:
+    # organisms_markers = np.zeros((self.width, self.height))
+
+    # for organism in self.organisms:
+    #    organisms_markers[organism.get_position().x][
+    #        organism.get_position().y
+    #    ] = organism.draw()
+
+    # return organisms_markers
 
     def check_collision(self, position: Point) -> Union[Org.Organism, None]:
         for organism in self.organisms:
-            if organism.position == position:
+            if (
+                organism.get_position().x == position.x
+                and organism.get_position().y == position.y
+            ):
                 return organism
 
         return None
@@ -90,7 +110,7 @@ class World:
         sosnowsky_hogweed_chance: int = 5,
         turtle_chance: int = 50,
         wolf_chance: int = 10,
-    ) -> None:
+    ) -> Human:
         cyber_sheep_chance += antelope_chance
         dandelion_chance += cyber_sheep_chance
         deadly_nightshade_chance += dandelion_chance
@@ -102,9 +122,11 @@ class World:
         turtle_chance += sosnowsky_hogweed_chance
         wolf_chance += turtle_chance
 
-        # position = Point(0, 0)
-
-        # add human
+        pos = Point(0, 0)
+        pos.x = random.randrange(self.width)
+        pos.y = random.randrange(self.height)
+        human = Human(pos, self)
+        self.add_organism(human)
 
         for i in range(organisms_number - 1):
             rand = random.randrange(wolf_chance)
@@ -138,3 +160,6 @@ class World:
                 self.add_organism(Turtle(position, self))
             elif rand < wolf_chance:
                 self.add_organism(Wolf(position, self))
+
+        self.draw_world()
+        return human

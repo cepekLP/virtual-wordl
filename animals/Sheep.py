@@ -11,6 +11,9 @@ class Sheep(Animal):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(4, 4, position, world_ref)
 
+    def draw(self) -> str:
+        return "GUI/images/sheep.png"
+
     def multiply(self) -> None:
         free_position = self.find_free_pos(self.position)
 

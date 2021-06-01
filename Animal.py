@@ -1,4 +1,5 @@
 import random
+from copy import copy
 from typing import Union, TYPE_CHECKING
 
 from Organism import Organism
@@ -27,7 +28,7 @@ class Animal(Organism):
             position_change.x = random.randrange(-1, 2)
             position_change.y = random.randrange(-1, 2)
 
-        next_position = self.position
+        next_position = copy(self.position)
         next_position.x += position_change.x
         next_position.y += position_change.y
 
@@ -41,13 +42,13 @@ class Animal(Organism):
         elif next_position.y < 0:
             next_position.y += 2
 
-        organism: Union[Organism, None] = self.world.check_collision(
-            next_position
-        )
+        organism = self.world.check_collision(next_position)
 
         if organism is not None:
             if self.collision(organism) == 1:
                 self.position = next_position
+        else:
+            self.position = next_position
 
         if self.delay > 0:
             self.delay -= 1
