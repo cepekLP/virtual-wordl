@@ -1,26 +1,22 @@
-import Organism as Org
 import random
 from typing import List, Union
 
-
-from Point import Point
-from Plant import Plant
+import Organism as Org
+from GUI.Game import Game
 from Human import Human
-
+from Plant import Plant
+from Point import Point
 from animals.Antelope import Antelope
 from animals.CyberSheep import CyberSheep
 from animals.Fox import Fox
 from animals.Sheep import Sheep
 from animals.Turtle import Turtle
 from animals.Wolf import Wolf
-
 from plants.Dandelion import Dandelion
 from plants.DeadlyNightshade import DeadlyNightshade
 from plants.Grass import Grass
 from plants.Guarana import Guarana
 from plants.SosnowskyHogweed import SosnowskyHogweed
-
-from GUI.Game import Game
 
 
 class World:
@@ -29,6 +25,7 @@ class World:
         self.height = height
         self.organisms: List[Org.Organism] = []  # add correct type annotation
         self.round_number = 0
+        self.log: str = ""
         self.game = game
 
     def get_width(self) -> int:
@@ -42,6 +39,8 @@ class World:
             organism.action()
 
         self.draw_world()
+        self.game.log.setText(self.log)
+        self.log = ""
 
     def draw_world(self) -> None:
         for i in range(self.height):
@@ -163,3 +162,6 @@ class World:
 
         self.draw_world()
         return human
+
+    def add_log(self, log: str) -> None:
+        self.log = self.log + " \n" + log

@@ -3,13 +3,11 @@ import sys
 from PyQt5 import QtGui, QtCore
 from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedLayout, QWidget
 
-from GUI.Menu import Menu
 from GUI.Game import Game
-
-from Point import Point
-
-from World import World
+from GUI.Menu import Menu
 from Human import Human
+from Point import Point
+from World import World
 
 
 class MainWindow(QMainWindow):

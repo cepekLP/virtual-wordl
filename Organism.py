@@ -1,5 +1,6 @@
 import random
 from typing import Any, Union, TYPE_CHECKING
+from copy import copy
 
 from Point import Point
 
@@ -30,31 +31,23 @@ class Organism:
     def get_position(self) -> Point:
         return self.position
 
+    def get_name(self) -> str:
+        return ""
+
+    def get_delay(self) -> int:
+        return self.delay
+
     def draw(self) -> str:
         return ""
 
     def action(self) -> None:
         pass
 
-    def collision(self, attacked: Any) -> int:
-        return -1
-
     def multiply(self) -> None:
         pass
 
     def deflect(self, attacker: Any) -> bool:
         return False
-
-    # fix type annotation from Any
-    #
-    #   NodeT = TypeVar(`NodeT`, bound=`Node`)
-    #
-    #    class Node(Object):
-    #       def add_sub(self, sub: NodeT):
-    #            ...
-    #
-    #       def get_subs(self) -> Sequence[NodeT]:
-    #            ...
 
     def run_away(self) -> bool:
         return False
@@ -69,7 +62,7 @@ class Organism:
             temp = random.randrange(len(positions))
             position_change = positions[temp]
             positions.pop(temp)
-            next_position = position
+            next_position = copy(position)
             next_position.x += position_change.x
             next_position.y += position_change.y
             if (
@@ -78,16 +71,19 @@ class Organism:
                 and next_position.y >= 0
                 and next_position.y < self.world.get_height()
                 and self.world.check_collision(next_position) is None
-            ):
+            ) or len(positions) == 0:
                 break
 
-        if self.world.check_collision(next_position) is not None:
+        if (
+            self.world.check_collision(next_position) is None
+            and next_position.x >= 0
+            and next_position.x < self.world.get_width()
+            and next_position.y >= 0
+            and next_position.y < self.world.get_height()
+        ):
             return next_position
         else:
             return None
 
-    def check_type(self, attacker: Any) -> bool:
-        return False
-
-    def special_trait(self, attacker: Any) -> bool:
+    def special_trait(self, attacker: "Organism") -> bool:
         return False

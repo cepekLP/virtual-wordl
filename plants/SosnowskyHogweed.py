@@ -12,6 +12,9 @@ class SosnowskyHogweed(Plant):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(11, position, world_ref)
 
+    def get_name(self) -> str:
+        return "Sosnowsky Hogweed"
+
     def draw(self) -> str:
         return "GUI/images/sosnowkyhogweed.jpg"
 
@@ -28,3 +31,10 @@ class SosnowskyHogweed(Plant):
             self.delay = PLANT_DELAY
         elif self.delay > 0:
             self.delay = self.delay - 1
+
+    def multiply(self) -> None:
+        free_position = self.find_free_pos(self.position)
+        if free_position is not None:
+            self.world.add_organism(
+                SosnowskyHogweed(free_position, self.world)
+            )

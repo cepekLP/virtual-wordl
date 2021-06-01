@@ -1,6 +1,7 @@
 import random
 from typing import TYPE_CHECKING
 
+from Organism import Organism
 from Animal import Animal
 from Point import Point
 
@@ -11,6 +12,9 @@ if TYPE_CHECKING:
 class Fox(Animal):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(3, 7, position, world_ref)
+
+    def get_name(self) -> str:
+        return "Fox"
 
     def draw(self) -> str:
         return "GUI/images/fox.png"
@@ -50,6 +54,11 @@ class Fox(Animal):
 
     def multiply(self):
         free_position = self.find_free_pos(self.position)
-
         if free_position is not None:
             self.world.add_organism(Fox(free_position, self.world))
+
+    def check_type(self, attacker: Organism) -> bool:
+        if isinstance(attacker, Fox):
+            return True
+        else:
+            return False

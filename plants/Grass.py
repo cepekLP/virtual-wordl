@@ -11,5 +11,13 @@ class Grass(Plant):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(0, position, world_ref)
 
+    def get_name(self) -> str:
+        return "Grass"
+
     def draw(self) -> str:
         return "GUI/images/grass.png"
+
+    def multiply(self) -> None:
+        free_position = self.find_free_pos(self.position)
+        if free_position is not None:
+            self.world.add_organism(Grass(free_position, self.world))

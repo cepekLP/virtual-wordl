@@ -1,11 +1,7 @@
 from typing import List
 
 from PyQt5 import uic
-from PyQt5.QtWidgets import (
-    QWidget,
-    QGridLayout,
-    QPushButton,
-)
+from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QVBoxLayout
 
 
 class Game(QWidget):
@@ -17,6 +13,7 @@ class Game(QWidget):
         uic.loadUi("GUI/game.ui", self)
         self.layout = QGridLayout()
         self.game_area.setLayout(self.layout)
+        self.layout1 = QVBoxLayout()
 
     def set_size(self, world_width: int, world_height: int) -> None:
         tile_size = min(550 // world_width, 550 // world_height)

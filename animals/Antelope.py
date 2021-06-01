@@ -1,6 +1,8 @@
 import random
 from typing import Union, TYPE_CHECKING
+from copy import copy
 
+from Organism import Organism
 from Animal import Animal
 from Point import Point
 
@@ -11,6 +13,9 @@ if TYPE_CHECKING:
 class Antelope(Animal):
     def __init__(self, position: Point, world_ref: "World"):
         super().__init__(4, 4, position, world_ref)
+
+    def get_name(self) -> str:
+        return "Antelope"
 
     def draw(self) -> str:
         return "GUI/images/antelope.png"
@@ -48,7 +53,6 @@ class Antelope(Animal):
 
     def multiply(self):
         free_position = self.find_free_pos(self.position)
-
         if free_position is not None:
             self.world.add_organism(Antelope(free_position, self.world))
 
@@ -73,7 +77,7 @@ class Antelope(Animal):
             temp = random.randrange(len(positions))
             position_change = positions[temp]
             positions.pop(temp)
-            next_position = position
+            next_position = copy(position)
             next_position.x += position_change.x
             next_position.y += position_change.y
             if (
@@ -85,10 +89,13 @@ class Antelope(Animal):
             ) or len(positions) == 0:
                 break
 
-        if (
-            self.world.check_collision(next_position) is not None
-            and len(positions) != 0
-        ):
+        if self.world.check_collision(next_position) is None:
             return next_position
         else:
             return None
+
+    def check_type(self, attacker: Organism) -> bool:
+        if isinstance(attacker, Antelope):
+            return True
+        else:
+            return False

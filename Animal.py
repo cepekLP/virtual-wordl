@@ -1,6 +1,6 @@
 import random
 from copy import copy
-from typing import Union, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from Organism import Organism
 from Point import Point
@@ -58,55 +58,81 @@ class Animal(Organism):
         Returns:
             1 for attacker win
             0 for attacker lose
+            -1 for error
         """
 
-        # info: str = ""
-        if self.check_type(attacked):
+        if (
+            self.check_type(attacked)
+            and self.delay == 0
+            and attacked.get_delay() == 0
+        ):
             self.multiply()
+            self.delay = ANIMAL_MULTIPLY_DELAY
         else:
             if attacked.get_strength() <= self.get_strength():
                 if attacked.deflect(self):
-                    # info = "O"
+                    self.world.add_log(
+                        self.log(attacked, "deflect attack from", self)
+                    )
                     return 0
                 elif attacked.run_away():
-                    # info = "U"
+                    self.world.add_log(
+                        self.log(attacked, "run away from", self)
+                    )
                     return 1
                 else:
-                    if attacked.special_trait(self) is False:
-                        pass
+                    attacked.special_trait(self)
+
+                    if isinstance(attacked, Animal):
+                        self.world.add_log(self.log(self, "kill", attacked))
+                    else:
+                        self.world.add_log(self.log(self, "eat", attacked))
+
                     self.world.remove_organism(attacked)
-                    # info = "R"
                     return 1
             else:
-                if self.run_away() is False:
+                if isinstance(attacked, Animal):
+                    if self.run_away() is False:
+                        self.world.add_log(
+                            self.log(self, "attacked and lose with", attacked)
+                        )
+                        self.world.remove_organism(self)
+                    else:
+                        self.world.add_log(
+                            self.log(
+                                self, "attacked and run away from", attacked
+                            )
+                        )
+                    return 0
+                else:
+                    self.world.remove_organism(attacked)
                     self.world.remove_organism(self)
-                return 0
+                    return 0
 
         return -1
 
-    def find_free_pos(self, position: Point) -> Union[Point, None]:
-        positions = []
-        for i in range(-1, 2):
-            for j in range(-1, 2):
-                positions.append(Point(i, j))
+    def check_type(self, attacker: Organism) -> bool:
+        return False
 
-        while True:
-            temp = random.randrange(len(positions))
-            position_change = positions[temp]
-            positions.pop(temp)
-            next_position = position
-            next_position.x += position_change.x
-            next_position.y += position_change.y
-            if (
-                next_position.x >= 0
-                and next_position.x < self.world.get_width()
-                and next_position.y >= 0
-                and next_position.y < self.world.get_height()
-                and self.world.check_collision(next_position) is None
-            ):
-                break
+    @staticmethod
+    def log(organism: Organism, text: str, organism2: Organism) -> str:
+        info = (
+            organism.get_name()
+            + " ["
+            + str(organism.get_position().x)
+            + ","
+            + str(organism.get_position().y)
+            + "] "
+            + text
+            + " "
+            + organism2.get_name()
+            + " ["
+            + str(organism2.get_position().x)
+            + ","
+            + str(organism2.get_position().y)
+            + "]"
+        )
+        return info
 
-        if self.world.check_collision(next_position) is not None:
-            return next_position
-        else:
-            return None
+    def increase_strength(self) -> None:
+        self.strength += 3

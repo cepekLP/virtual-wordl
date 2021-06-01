@@ -15,6 +15,9 @@ class Human(Animal):
         self.position_change: Point
         self.skill_timer: int = 0
 
+    def get_name(self) -> str:
+        return "Human"
+
     def draw(self) -> str:
         return "GUI/images/human.png"
 
