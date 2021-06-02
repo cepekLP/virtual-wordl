@@ -27,7 +27,7 @@ class World:
         self.height = height
         self.organisms: List[Org.Organism] = []  # add correct type annotation
         self.round_number = 1
-        self.log: str = "Round number: 0"
+        self.log: str = "Round number: 0 \n\n"
 
     # self.game = game
 
@@ -44,6 +44,9 @@ class World:
 
         return Human(Point(0, 0), self), False
 
+    def get_organism_list(self) -> List[Org.Organism]:
+        return self.organisms
+
     def make_round(self) -> None:
         for organism in self.organisms:
             organism.action()
@@ -55,7 +58,6 @@ class World:
         for i in range(self.height):
             for j in range(self.width):
                 game.world_tiles[j][i].setStyleSheet("")
-        print(self.round_number)
 
         endgame: bool = True
         for organism in self.organisms:
@@ -67,13 +69,6 @@ class World:
                 "border-image: url("
                 + organism.draw()
                 + ") 0 0 0 0 stretch stretch"
-            )
-            print(
-                organism.get_name()
-                + " "
-                + str(organism.get_position().x)
-                + " "
-                + str(organism.get_position().y)
             )
 
         game.log.setText(self.log)
@@ -125,12 +120,12 @@ class World:
         antelope_chance: int = 50,
         cyber_sheep_chance: int = 10,
         dandelion_chance: int = 25,
-        deadly_nightshade_chance: int = 5,
+        deadly_nightshade_chance: int = 10,
         fox_chance: int = 25,
         grass_chance: int = 100,
         guarana_chance: int = 50,
         sheep_chance: int = 75,
-        sosnowsky_hogweed_chance: int = 5,
+        sosnowsky_hogweed_chance: int = 10,
         turtle_chance: int = 50,
         wolf_chance: int = 10,
     ) -> Human:

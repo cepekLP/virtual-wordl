@@ -1,6 +1,8 @@
 import random
 from typing import TYPE_CHECKING
 
+from Animal import Animal
+import animals.CyberSheep as CS
 from Plant import Plant, PLANT_DELAY, PLANT_CHANCE_TO_MULTIPLY
 from Point import Point
 
@@ -22,8 +24,14 @@ class SosnowskyHogweed(Plant):
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i != 0 and j != 0:
-                    organism = self.world.check_collision(Point(i, j))
-                    if organism is not None:
+                    organism = self.world.check_collision(
+                        Point(self.position.x + i, self.position.y + j)
+                    )
+                    if (
+                        organism is not None
+                        and isinstance(organism, Animal)
+                        and not isinstance(organism, CS.CyberSheep)
+                    ):
                         self.world.remove_organism(organism)
 
         if random.random() < PLANT_CHANCE_TO_MULTIPLY and self.delay == 0:

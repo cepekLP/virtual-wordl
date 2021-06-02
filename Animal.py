@@ -53,14 +53,6 @@ class Animal(Organism):
         if self.delay > 0:
             self.delay -= 1
 
-        self.world.add_log(
-            self.get_name()
-            + " move to "
-            + str(self.position.x)
-            + " "
-            + str(self.position.y)
-        )
-
     def collision(self, attacked: Organism) -> int:
         """
         Returns:
@@ -114,8 +106,6 @@ class Animal(Organism):
                     self.world.remove_organism(attacked)
                     self.world.remove_organism(self)
                     return 0
-
-        return -1
 
     def check_type(self, attacker: Organism) -> bool:
         return False
