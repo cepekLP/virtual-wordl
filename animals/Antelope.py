@@ -28,7 +28,7 @@ class Antelope(Animal):
             position_change_x = random.randrange(-2, 3)
             position_change_y = random.randrange(-2, 3)
 
-        next_position = self.position
+        next_position = copy(self.position)
         next_position.x += position_change_x
         next_position.y += position_change_y
 
@@ -81,15 +81,17 @@ class Antelope(Animal):
             next_position.x += position_change.x
             next_position.y += position_change.y
             if (
-                next_position.x >= 0
-                and next_position.x < self.world.get_width()
-                and next_position.y >= 0
-                and next_position.y < self.world.get_height()
+                0 <= next_position.x < self.world.get_width()
+                and 0 <= next_position.y < self.world.get_height()
                 and self.world.check_collision(next_position) is None
             ) or len(positions) == 0:
                 break
 
-        if self.world.check_collision(next_position) is None:
+        if (
+            0 <= next_position.x < self.world.get_width()
+            and 0 <= next_position.y < self.world.get_height()
+            and self.world.check_collision(next_position) is None
+        ):
             return next_position
         else:
             return None

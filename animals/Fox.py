@@ -1,8 +1,9 @@
 import random
 from typing import TYPE_CHECKING
+from copy import copy
 
-from Organism import Organism
 from Animal import Animal
+from Organism import Organism
 from Point import Point
 
 if TYPE_CHECKING:
@@ -26,7 +27,7 @@ class Fox(Animal):
             position_change.x = random.randrange(-1, 2)
             position_change.y = random.randrange(-1, 2)
 
-        next_position = self.position
+        next_position = copy(self.position)
         next_position.x += position_change.x
         next_position.y += position_change.y
 

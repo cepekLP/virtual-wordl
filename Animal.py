@@ -53,6 +53,14 @@ class Animal(Organism):
         if self.delay > 0:
             self.delay -= 1
 
+        self.world.add_log(
+            self.get_name()
+            + " move to "
+            + str(self.position.x)
+            + " "
+            + str(self.position.y)
+        )
+
     def collision(self, attacked: Organism) -> int:
         """
         Returns:
@@ -61,13 +69,11 @@ class Animal(Organism):
             -1 for error
         """
 
-        if (
-            self.check_type(attacked)
-            and self.delay == 0
-            and attacked.get_delay() == 0
-        ):
-            self.multiply()
-            self.delay = ANIMAL_MULTIPLY_DELAY
+        if self.check_type(attacked):
+            if self.delay == 0 and attacked.get_delay() == 0:
+                self.multiply()
+                self.delay = ANIMAL_MULTIPLY_DELAY
+            return 0
         else:
             if attacked.get_strength() <= self.get_strength():
                 if attacked.deflect(self):

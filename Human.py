@@ -57,3 +57,6 @@ class Human(Animal):
 
     def set_position_change(self, position_change: Point) -> None:
         self.position_change = position_change
+
+    def activate_skill(self) -> None:
+        self.skill_timer = 5

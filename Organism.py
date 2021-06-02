@@ -66,20 +66,16 @@ class Organism:
             next_position.x += position_change.x
             next_position.y += position_change.y
             if (
-                next_position.x >= 0
-                and next_position.x < self.world.get_width()
-                and next_position.y >= 0
-                and next_position.y < self.world.get_height()
+                0 <= next_position.x < self.world.get_width()
+                and 0 <= next_position.y < self.world.get_height()
                 and self.world.check_collision(next_position) is None
             ) or len(positions) == 0:
                 break
 
         if (
             self.world.check_collision(next_position) is None
-            and next_position.x >= 0
-            and next_position.x < self.world.get_width()
-            and next_position.y >= 0
-            and next_position.y < self.world.get_height()
+            and 0 <= next_position.x < self.world.get_width()
+            and 0 <= next_position.y < self.world.get_height()
         ):
             return next_position
         else:

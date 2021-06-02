@@ -1,5 +1,6 @@
 import random
 from typing import TYPE_CHECKING
+from copy import copy
 
 from Organism import Organism
 from Animal import Animal
@@ -27,7 +28,7 @@ class Turtle(Animal):
                 position_change.x = random.randrange(-1, 2)
                 position_change.y = random.randrange(-1, 2)
 
-            next_position = self.position
+            next_position = copy(self.position)
             next_position.x += position_change.x
             next_position.y += position_change.y
 

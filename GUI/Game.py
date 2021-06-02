@@ -17,18 +17,11 @@ class Game(QWidget):
 
     def set_size(self, world_width: int, world_height: int) -> None:
         tile_size = min(550 // world_width, 550 // world_height)
-        for i in range(world_height):
+        for i in range(world_width):
             h_list = []
-            for j in range(world_width):
+            for j in range(world_height):
                 button = QPushButton()
                 button.setFixedSize(tile_size, tile_size)
                 h_list.append(button)
-
-                # button.setStyleSheet(
-                #    "border-image: url(GUI/images/turtle.png) \
-                #     0 0 0 0 stretch stretch"
-                # )
                 self.layout.addWidget(button, j, i)
             self.world_tiles.append(h_list)
-
-        # self.world_tiles[1][1].label.setPixmap(QPixmap("GUI/images/turtle.png"))

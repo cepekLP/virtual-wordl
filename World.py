@@ -1,5 +1,5 @@
 import random
-from typing import List, Union
+from typing import List, Union, Tuple
 
 import Organism as Org
 from GUI.Game import Game
@@ -18,15 +18,18 @@ from plants.Grass import Grass
 from plants.Guarana import Guarana
 from plants.SosnowskyHogweed import SosnowskyHogweed
 
+random.seed(10)
+
 
 class World:
-    def __init__(self, width: int, height: int, game: Game) -> None:
+    def __init__(self, width: int, height: int) -> None:
         self.width = width
         self.height = height
         self.organisms: List[Org.Organism] = []  # add correct type annotation
-        self.round_number = 0
-        self.log: str = ""
-        self.game = game
+        self.round_number = 1
+        self.log: str = "Round number: 0"
+
+    # self.game = game
 
     def get_width(self) -> int:
         return self.width
@@ -34,37 +37,49 @@ class World:
     def get_height(self) -> int:
         return self.height
 
+    def get_human(self) -> Tuple[Human, bool]:
+        for organism in self.organisms:
+            if isinstance(organism, Human):
+                return organism, True
+
+        return Human(Point(0, 0), self), False
+
     def make_round(self) -> None:
         for organism in self.organisms:
             organism.action()
 
-        self.draw_world()
-        self.game.log.setText(self.log)
-        self.log = ""
+        self.round_number += 1
 
-    def draw_world(self) -> None:
+    def draw_world(self, game: Game) -> bool:
+        self.add_log("Organism number: " + str(len(self.organisms)))
         for i in range(self.height):
             for j in range(self.width):
-                self.game.world_tiles[i][j].setStyleSheet("")
+                game.world_tiles[j][i].setStyleSheet("")
+        print(self.round_number)
 
+        endgame: bool = True
         for organism in self.organisms:
-            self.game.world_tiles[organism.get_position().x][
+            if isinstance(organism, Human):
+                endgame = False
+            game.world_tiles[organism.get_position().x][
                 organism.get_position().y
             ].setStyleSheet(
                 "border-image: url("
                 + organism.draw()
                 + ") 0 0 0 0 stretch stretch"
             )
+            print(
+                organism.get_name()
+                + " "
+                + str(organism.get_position().x)
+                + " "
+                + str(organism.get_position().y)
+            )
 
-    # def draw_world(self) -> np.array:
-    # organisms_markers = np.zeros((self.width, self.height))
+        game.log.setText(self.log)
+        self.log = "Round number: " + str(self.round_number) + "\n\n"
 
-    # for organism in self.organisms:
-    #    organisms_markers[organism.get_position().x][
-    #        organism.get_position().y
-    #    ] = organism.draw()
-
-    # return organisms_markers
+        return endgame
 
     def check_collision(self, position: Point) -> Union[Org.Organism, None]:
         for organism in self.organisms:
@@ -88,6 +103,15 @@ class World:
             ):
                 i += 1
             self.organisms.insert(i, organism)
+        self.add_log(
+            "Added "
+            + organism.get_name()
+            + " in ["
+            + str(organism.get_position().x)
+            + ","
+            + str(organism.get_position().y)
+            + "]"
+        )
 
     def remove_organism(self, organism: Org.Organism) -> None:
         try:
@@ -160,8 +184,8 @@ class World:
             elif rand < wolf_chance:
                 self.add_organism(Wolf(position, self))
 
-        self.draw_world()
+        # self.draw_world()
         return human
 
     def add_log(self, log: str) -> None:
-        self.log = self.log + " \n" + log
+        self.log = self.log + log + " \n"

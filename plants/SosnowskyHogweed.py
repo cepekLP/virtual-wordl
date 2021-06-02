@@ -16,7 +16,7 @@ class SosnowskyHogweed(Plant):
         return "Sosnowsky Hogweed"
 
     def draw(self) -> str:
-        return "GUI/images/sosnowkyhogweed.jpg"
+        return "GUI/images/sosnowskyhogweed.jpg"
 
     def action(self):
         for i in range(-1, 2):
