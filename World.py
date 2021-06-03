@@ -18,8 +18,6 @@ from plants.Grass import Grass
 from plants.Guarana import Guarana
 from plants.SosnowskyHogweed import SosnowskyHogweed
 
-random.seed(10)
-
 
 class World:
     def __init__(self, width: int, height: int) -> None:
@@ -28,6 +26,7 @@ class World:
         self.organisms: List[Org.Organism] = []  # add correct type annotation
         self.round_number = 1
         self.log: str = "Round number: 0 \n\n"
+        self.end_game: bool = False
 
     # self.game = game
 
@@ -59,10 +58,7 @@ class World:
             for j in range(self.width):
                 game.world_tiles[j][i].setStyleSheet("")
 
-        endgame: bool = True
         for organism in self.organisms:
-            if isinstance(organism, Human):
-                endgame = False
             game.world_tiles[organism.get_position().x][
                 organism.get_position().y
             ].setStyleSheet(
@@ -74,7 +70,7 @@ class World:
         game.log.setText(self.log)
         self.log = "Round number: " + str(self.round_number) + "\n\n"
 
-        return endgame
+        return self.end_game
 
     def check_collision(self, position: Point) -> Union[Org.Organism, None]:
         for organism in self.organisms:
@@ -111,6 +107,8 @@ class World:
     def remove_organism(self, organism: Org.Organism) -> None:
         try:
             self.organisms.remove(organism)
+            if isinstance(organism, Human):
+                self.end_game = True
         except ValueError:
             print("There is no that organism")
 

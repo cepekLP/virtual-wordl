@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QStackedLayout, QWidget
 
 from GUI.Game import Game
 from GUI.Menu import Menu
+from GUI.EndGame import EndGame
 from Human import Human
 from Point import Point
 from World import World
@@ -18,8 +19,8 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.organisms_num: int = 1
-        self.world_width: int = 1
-        self.world_height: int = 1
+        self.world_width: int = 2
+        self.world_height: int = 2
         self.start_round: bool = False
         self.human: Human
         self.world: World
@@ -39,9 +40,13 @@ class MainWindow(QMainWindow):
 
         self.game = Game(screen_width, screen_height)
 
+        self.end_game = EndGame()
+        # self.end_game.new_game_button.pressed.connect(self.new_game)
+
         self.layout = QStackedLayout()
         self.layout.addWidget(self.menu)
         self.layout.addWidget(self.game)
+        self.layout.addWidget(self.end_game)
         widget = QWidget()
         widget.setLayout(self.layout)
         self.setCentralWidget(widget)
