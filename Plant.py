@@ -18,8 +18,8 @@ class Plant(Organism):
         super().__init__(strength, 0, position, world_ref)
 
     def action(self) -> None:
-        if random.random() < PLANT_CHANCE_TO_MULTIPLY and self.delay == 0:
-            self.multiply()
-            self.delay = PLANT_DELAY
-        elif self.delay > 0:
-            self.delay = self.delay - 1
+        if random.random() < PLANT_CHANCE_TO_MULTIPLY and self._delay == 0:
+            self._multiply()
+            self._delay = PLANT_DELAY
+        elif self._delay > 0:
+            self._delay = self._delay - 1

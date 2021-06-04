@@ -28,37 +28,37 @@ class Antelope(Animal):
             position_change_x = random.randrange(-2, 3)
             position_change_y = random.randrange(-2, 3)
 
-        next_position = copy(self.position)
+        next_position = copy(self._position)
         next_position.x += position_change_x
         next_position.y += position_change_y
 
-        if next_position.x >= self.world.get_width():
+        if next_position.x >= self._world.get_width():
             next_position.x -= 3
         elif next_position.x < 0:
             next_position.x += 3
 
-        if next_position.y >= self.world.get_height():
+        if next_position.y >= self._world.get_height():
             next_position.y -= 3
         elif next_position.y < 0:
             next_position.y += 3
 
-        organism = self.world.check_collision(next_position)
+        organism = self._world.check_collision(next_position)
 
         if organism is not None:
-            if self.collision(organism) == 1:
-                self.position = next_position
+            if self._collision(organism) == 1:
+                self._position = next_position
 
-        if self.delay > 0:
-            self.delay -= 1
+        if self._delay > 0:
+            self._delay -= 1
 
-    def multiply(self):
-        free_position = self.find_free_pos(self.position)
+    def _multiply(self):
+        free_position = self._find_free_pos(self._position)
         if free_position is not None:
-            self.world.add_organism(Antelope(free_position, self.world))
+            self._world.add_organism(Antelope(free_position, self._world))
 
-    def run_away(self):
+    def _run_away(self):
         if random.random() < 0.5:
-            next_position = self.find_free_pos(self.position)
+            next_position = self._find_free_pos(self._position)
             if next_position is not None:
                 self.position = next_position
                 return True
@@ -67,7 +67,7 @@ class Antelope(Animal):
         else:
             return False
 
-    def find_free_pos(self, position: Point) -> Union[Point, None]:
+    def _find_free_pos(self, position: Point) -> Union[Point, None]:
         positions = []
         for i in range(-2, 3):
             for j in range(-2, 3):
@@ -81,22 +81,22 @@ class Antelope(Animal):
             next_position.x += position_change.x
             next_position.y += position_change.y
             if (
-                0 <= next_position.x < self.world.get_width()
-                and 0 <= next_position.y < self.world.get_height()
-                and self.world.check_collision(next_position) is None
+                0 <= next_position.x < self._world.get_width()
+                and 0 <= next_position.y < self._world.get_height()
+                and self._world.check_collision(next_position) is None
             ) or len(positions) == 0:
                 break
 
         if (
-            0 <= next_position.x < self.world.get_width()
-            and 0 <= next_position.y < self.world.get_height()
-            and self.world.check_collision(next_position) is None
+            0 <= next_position.x < self._world.get_width()
+            and 0 <= next_position.y < self._world.get_height()
+            and self._world.check_collision(next_position) is None
         ):
             return next_position
         else:
             return None
 
-    def check_type(self, attacker: Organism) -> bool:
+    def _check_type(self, attacker: Organism) -> bool:
         if isinstance(attacker, Antelope):
             return True
         else:

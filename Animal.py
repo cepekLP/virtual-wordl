@@ -28,32 +28,32 @@ class Animal(Organism):
             position_change.x = random.randrange(-1, 2)
             position_change.y = random.randrange(-1, 2)
 
-        next_position = copy(self.position)
+        next_position = copy(self._position)
         next_position.x += position_change.x
         next_position.y += position_change.y
 
-        if next_position.x >= self.world.get_width():
+        if next_position.x >= self._world.get_width():
             next_position.x -= 2
         elif next_position.x < 0:
             next_position.x += 2
 
-        if next_position.y >= self.world.get_height():
+        if next_position.y >= self._world.get_height():
             next_position.y -= 2
         elif next_position.y < 0:
             next_position.y += 2
 
-        organism = self.world.check_collision(next_position)
+        organism = self._world.check_collision(next_position)
 
         if organism is not None:
-            if self.collision(organism) == 1:
-                self.position = next_position
+            if self._collision(organism) == 1:
+                self._position = next_position
         else:
-            self.position = next_position
+            self._position = next_position
 
-        if self.delay > 0:
-            self.delay -= 1
+        if self._delay > 0:
+            self._delay -= 1
 
-    def collision(self, attacked: Organism) -> int:
+    def _collision(self, attacked: Organism) -> int:
         """
         Returns:
             1 for attacker win
@@ -61,57 +61,56 @@ class Animal(Organism):
             -1 for error
         """
 
-        if self.check_type(attacked):
-            if self.delay == 0 and attacked.get_delay() == 0:
-                self.multiply()
-                self.delay = ANIMAL_MULTIPLY_DELAY
+        if self._check_type(attacked):
+            if self._delay == 0 and attacked.get_delay() == 0:
+                self._multiply()
+                self._delay = ANIMAL_MULTIPLY_DELAY
             return 0
         else:
             if attacked.get_strength() <= self.get_strength():
-                if attacked.deflect(self):
-                    self.world.add_log(
-                        self.log(attacked, "deflect attack from", self)
+                if attacked._deflect(self):
+                    self._world.add_log(
+                        self._log(attacked, "deflect attack from", self)
                     )
                     return 0
-                elif attacked.run_away():
-                    self.world.add_log(
-                        self.log(attacked, "run away from", self)
+                elif attacked._run_away():
+                    self._world.add_log(
+                        self._log(attacked, "run away from", self)
                     )
                     return 1
                 else:
-                    attacked.special_trait(self)
 
                     if isinstance(attacked, Animal):
-                        self.world.add_log(self.log(self, "kill", attacked))
+                        self._world.add_log(self._log(self, "kill", attacked))
                     else:
-                        self.world.add_log(self.log(self, "eat", attacked))
-
-                    self.world.remove_organism(attacked)
+                        self._world.add_log(self._log(self, "eat", attacked))
+                    if not attacked.special_trait(self):
+                        self._world.remove_organism(attacked)
                     return 1
             else:
                 if isinstance(attacked, Animal):
-                    if self.run_away() is False:
-                        self.world.add_log(
-                            self.log(self, "attacked and lose with", attacked)
+                    if self._run_away() is False:
+                        self._world.add_log(
+                            self._log(self, "attacked and lose with", attacked)
                         )
-                        self.world.remove_organism(self)
+                        self._world.remove_organism(self)
                     else:
-                        self.world.add_log(
-                            self.log(
+                        self._world.add_log(
+                            self._log(
                                 self, "attacked and run away from", attacked
                             )
                         )
                     return 0
                 else:
-                    self.world.remove_organism(attacked)
-                    self.world.remove_organism(self)
+                    self._world.remove_organism(attacked)
+                    self._world.remove_organism(self)
                     return 0
 
-    def check_type(self, attacker: Organism) -> bool:
+    def _check_type(self, attacker: Organism) -> bool:
         return False
 
     @staticmethod
-    def log(organism: Organism, text: str, organism2: Organism) -> str:
+    def _log(organism: Organism, text: str, organism2: Organism) -> str:
         info = (
             organism.get_name()
             + " ["
@@ -129,6 +128,3 @@ class Animal(Organism):
             + "]"
         )
         return info
-
-    def increase_strength(self) -> None:
-        self.strength += 3

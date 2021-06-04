@@ -21,44 +21,44 @@ from plants.SosnowskyHogweed import SosnowskyHogweed
 
 class World:
     def __init__(self, width: int, height: int) -> None:
-        self.width = width
-        self.height = height
-        self.organisms: List[Org.Organism] = []  # add correct type annotation
-        self.round_number = 1
-        self.log: str = "Round number: 0 \n\n"
-        self.end_game: bool = False
+        self._width = width
+        self._height = height
+        self._organisms: List[Org.Organism] = []  # add correct type annotation
+        self._round_number = 1
+        self._log: str = "Round number: 0 \n\n"
+        self._end_game: bool = False
 
     # self.game = game
 
     def get_width(self) -> int:
-        return self.width
+        return self._width
 
     def get_height(self) -> int:
-        return self.height
+        return self._height
 
     def get_human(self) -> Tuple[Human, bool]:
-        for organism in self.organisms:
+        for organism in self._organisms:
             if isinstance(organism, Human):
                 return organism, True
 
         return Human(Point(0, 0), self), False
 
     def get_organism_list(self) -> List[Org.Organism]:
-        return self.organisms
+        return self._organisms
 
     def make_round(self) -> None:
-        for organism in self.organisms:
+        for organism in self._organisms:
             organism.action()
 
-        self.round_number += 1
+        self._round_number += 1
 
     def draw_world(self, game: Game) -> bool:
-        self.add_log("Organism number: " + str(len(self.organisms)))
-        for i in range(self.height):
-            for j in range(self.width):
-                game.world_tiles[j][i].setStyleSheet("")
+        self.add_log("Organism number: " + str(len(self._organisms)))
+        for i in range(self._height):
+            for j in range(self._width):
+                game.world_tiles[j][i].setStyleSheet("background-color: white")
 
-        for organism in self.organisms:
+        for organism in self._organisms:
             game.world_tiles[organism.get_position().x][
                 organism.get_position().y
             ].setStyleSheet(
@@ -67,13 +67,13 @@ class World:
                 + ") 0 0 0 0 stretch stretch"
             )
 
-        game.log.setText(self.log)
-        self.log = "Round number: " + str(self.round_number) + "\n\n"
+        game.log.setText(self._log)
+        self._log = "Round number: " + str(self._round_number) + "\n\n"
 
-        return self.end_game
+        return self._end_game
 
     def check_collision(self, position: Point) -> Union[Org.Organism, None]:
-        for organism in self.organisms:
+        for organism in self._organisms:
             if (
                 organism.get_position().x == position.x
                 and organism.get_position().y == position.y
@@ -84,16 +84,16 @@ class World:
 
     def add_organism(self, organism: Org.Organism) -> None:
         if isinstance(organism, Plant):
-            self.organisms.append(organism)
+            self._organisms.append(organism)
         else:
             i = 0
             while (
-                i < len(self.organisms)
-                and self.organisms[i].get_initiative()
+                i < len(self._organisms)
+                and self._organisms[i].get_initiative()
                 >= organism.get_initiative()
             ):
                 i += 1
-            self.organisms.insert(i, organism)
+            self._organisms.insert(i, organism)
         self.add_log(
             "Added "
             + organism.get_name()
@@ -106,9 +106,9 @@ class World:
 
     def remove_organism(self, organism: Org.Organism) -> None:
         try:
-            self.organisms.remove(organism)
+            self._organisms.remove(organism)
             if isinstance(organism, Human):
-                self.end_game = True
+                self._end_game = True
         except ValueError:
             print("There is no that organism")
 
@@ -139,8 +139,8 @@ class World:
         wolf_chance += turtle_chance
 
         pos = Point(0, 0)
-        pos.x = random.randrange(self.width)
-        pos.y = random.randrange(self.height)
+        pos.x = random.randrange(self._width)
+        pos.y = random.randrange(self._height)
         human = Human(pos, self)
         self.add_organism(human)
 
@@ -148,8 +148,8 @@ class World:
             rand = random.randrange(wolf_chance)
             position = Point(0, 0)
             while True:
-                position.x = random.randrange(self.width)
-                position.y = random.randrange(self.height)
+                position.x = random.randrange(self._width)
+                position.y = random.randrange(self._height)
 
                 if self.check_collision(position) is None:
                     break
@@ -181,4 +181,4 @@ class World:
         return human
 
     def add_log(self, log: str) -> None:
-        self.log = self.log + log + " \n"
+        self._log = self._log + log + " \n"

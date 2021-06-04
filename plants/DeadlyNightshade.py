@@ -1,5 +1,6 @@
 from typing import TYPE_CHECKING
 
+from Organism import Organism
 from Plant import Plant
 from Point import Point
 
@@ -17,9 +18,14 @@ class DeadlyNightshade(Plant):
     def draw(self) -> str:
         return "GUI/images/deadlynightshade.png"
 
-    def multiply(self) -> None:
-        free_position = self.find_free_pos(self.position)
+    def special_trait(self, attacker: Organism) -> bool:
+        self._world.remove_organism(self)
+        self._world.remove_organism(attacker)
+        return True
+
+    def _multiply(self) -> None:
+        free_position = self._find_free_pos(self._position)
         if free_position is not None:
-            self.world.add_organism(
-                DeadlyNightshade(free_position, self.world)
+            self._world.add_organism(
+                DeadlyNightshade(free_position, self._world)
             )

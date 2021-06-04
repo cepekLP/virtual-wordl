@@ -18,110 +18,116 @@ class MainWindow(QMainWindow):
     ) -> None:
         super().__init__()
 
-        self.organisms_num: int = 1
-        self.world_width: int = 2
-        self.world_height: int = 2
-        self.start_round: bool = False
-        self.human: Human
-        self.world: World
+        self._organisms_num: int = 1
+        self._world_width: int = 2
+        self._world_height: int = 2
+        self._start_round: bool = False
+        self._human: Human
+        self._world: World
 
         self.setWindowTitle("Virtual World")
         self.setFixedSize(screen_width, screen_height)
 
-        self.menu = Menu(screen_width, screen_height)
-        self.check_save_file()
+        self._menu = Menu(screen_width, screen_height)
+        self.__check_save_file()
 
-        self.menu.start_button.pressed.connect(self.start_game)
-        self.menu.load_button.pressed.connect(self.load_game)
-        self.menu.world_width.valueChanged.connect(self.set_world_width)
-        self.menu.world_height.valueChanged.connect(self.set_world_height)
-        self.menu.organisms_slider.valueChanged.connect(self.set_organisms_num)
-        self.menu.organisms_spin.valueChanged.connect(self.set_organisms_num)
+        self._menu.start_button.pressed.connect(self.__start_game)
+        self._menu.load_button.pressed.connect(self.__load_game)
+        self._menu.world_width.valueChanged.connect(self.__set_world_width)
+        self._menu.world_height.valueChanged.connect(self.__set_world_height)
+        self._menu.organisms_slider.valueChanged.connect(
+            self.__set_organisms_num
+        )
+        self._menu.organisms_spin.valueChanged.connect(
+            self.__set_organisms_num
+        )
 
-        self.game = Game(screen_width, screen_height)
+        self._game = Game(screen_width, screen_height)
 
-        self.end_game = EndGame()
+        self._end_game = EndGame()
         # self.end_game.new_game_button.pressed.connect(self.new_game)
 
-        self.layout = QStackedLayout()
-        self.layout.addWidget(self.menu)
-        self.layout.addWidget(self.game)
-        self.layout.addWidget(self.end_game)
+        self._layout = QStackedLayout()
+        self._layout.addWidget(self._menu)
+        self._layout.addWidget(self._game)
+        self._layout.addWidget(self._end_game)
         widget = QWidget()
-        widget.setLayout(self.layout)
+        widget.setLayout(self._layout)
         self.setCentralWidget(widget)
 
-    def check_save_file(self) -> None:
+    def __check_save_file(self) -> None:
         try:
             f = open("save.p", "rb")
-            self.menu.load_button.setEnabled(True)
+            self._menu.load_button.setEnabled(True)
             f.close()
         except OSError:
-            self.menu.load_button.setEnabled(False)
+            self._menu.load_button.setEnabled(False)
 
-    def set_world_width(self, v: int) -> None:
-        self.world_width = v
-        self.set_max_organisms()
+    def __set_world_width(self, v: int) -> None:
+        self._world_width = v
+        self.__set_max_organisms()
 
-    def set_world_height(self, v: int) -> None:
-        self.world_height = v
-        self.set_max_organisms()
+    def __set_world_height(self, v: int) -> None:
+        self._world_height = v
+        self.__set_max_organisms()
 
-    def set_max_organisms(self):
-        self.menu.organisms_slider.setMaximum(
-            self.world_width * self.world_height
+    def __set_max_organisms(self):
+        self._menu.organisms_slider.setMaximum(
+            self._world_width * self._world_height
         )
-        self.menu.organisms_spin.setMaximum(
-            self.world_width * self.world_height
+        self._menu.organisms_spin.setMaximum(
+            self._world_width * self._world_height
         )
 
-    def set_organisms_num(self, v: int) -> None:
-        self.organisms_num = v
-        if self.menu.organisms_slider.value() != v:
-            self.menu.organisms_slider.setValue(v)
+    def __set_organisms_num(self, v: int) -> None:
+        self._organisms_num = v
+        if self._menu.organisms_slider.value() != v:
+            self._menu.organisms_slider.setValue(v)
         else:
-            self.menu.organisms_spin.setValue(v)
+            self._menu.organisms_spin.setValue(v)
 
-    def start_game(self) -> None:
-        self.game.set_size(self.world_width, self.world_height)
-        self.world = World(self.world_width, self.world_height)
-        self.human = self.world.generate_organisms(self.organisms_num)
-        self.world.draw_world(self.game)
-        self.layout.setCurrentIndex(1)
+    def __start_game(self) -> None:
+        self._game.set_size(self._world_width, self._world_height)
+        self._world = World(self._world_width, self._world_height)
+        self._human = self._world.generate_organisms(self._organisms_num)
+        self._world.draw_world(self._game)
+        self._layout.setCurrentIndex(1)
 
-    def load_game(self) -> None:
-        self.world = pi.load(open("save.p", "rb"))
-        self.human, validate = self.world.get_human()
+    def __load_game(self) -> None:
+        self._world = pi.load(open("save.p", "rb"))
+        self._human, validate = self._world.get_human()
         if validate:
-            self.game.set_size(self.world.get_width(), self.world.get_height())
-            self.world.draw_world(self.game)
-            self.layout.setCurrentIndex(1)
+            self._game.set_size(
+                self._world.get_width(), self._world.get_height()
+            )
+            self._world.draw_world(self._game)
+            self._layout.setCurrentIndex(1)
         else:
-            self.layout.setCurrentIndex(2)
+            self._layout.setCurrentIndex(2)
 
     def keyPressEvent(self, event: QtGui.QKeyEvent) -> None:
         if event.key() == QtCore.Qt.Key_W:
-            self.human.set_position_change(Point(0, -1))
-            self.start_round = True
+            self._human.set_position_change(Point(0, -1))
+            self._start_round = True
         elif event.key() == QtCore.Qt.Key_S:
-            self.human.set_position_change(Point(0, 1))
-            self.start_round = True
+            self._human.set_position_change(Point(0, 1))
+            self._start_round = True
         elif event.key() == QtCore.Qt.Key_A:
-            self.human.set_position_change(Point(-1, 0))
-            self.start_round = True
+            self._human.set_position_change(Point(-1, 0))
+            self._start_round = True
         elif event.key() == QtCore.Qt.Key_D:
-            self.human.set_position_change(Point(1, 0))
-            self.start_round = True
+            self._human.set_position_change(Point(1, 0))
+            self._start_round = True
         elif event.key() == QtCore.Qt.Key_E:
-            self.human.activate_skill()
+            self._human.activate_skill()
         elif event.key() == QtCore.Qt.Key_Z:
-            pi.dump(self.world, open("save.p", "wb"))
+            pi.dump(self._world, open("save.p", "wb"))
 
-        if self.start_round:
-            self.world.make_round()
-            if self.world.draw_world(self.game):
-                self.layout.setCurrentIndex(2)
-            self.start_round = False
+        if self._start_round:
+            self._world.make_round()
+            if self._world.draw_world(self._game):
+                self._layout.setCurrentIndex(2)
+            self._start_round = False
 
 
 if __name__ == "__main__":

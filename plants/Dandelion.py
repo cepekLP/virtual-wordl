@@ -20,13 +20,13 @@ class Dandelion(Plant):
 
     def action(self) -> None:
         for i in range(3):
-            if random.random() < PLANT_CHANCE_TO_MULTIPLY and self.delay == 0:
-                self.multiply()
-                self.delay = PLANT_DELAY
-            elif self.delay > 0:
-                self.delay = self.delay - 1
+            if random.random() < PLANT_CHANCE_TO_MULTIPLY and self._delay == 0:
+                self._multiply()
+                self._delay = PLANT_DELAY
+            elif self._delay > 0:
+                self._delay = self._delay - 1
 
-    def multiply(self) -> None:
-        free_position = self.find_free_pos(self.position)
+    def _multiply(self) -> None:
+        free_position = self._find_free_pos(self._position)
         if free_position is not None:
-            self.world.add_organism(Dandelion(free_position, self.world))
+            self._world.add_organism(Dandelion(free_position, self._world))

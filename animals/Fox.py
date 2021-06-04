@@ -27,38 +27,38 @@ class Fox(Animal):
             position_change.x = random.randrange(-1, 2)
             position_change.y = random.randrange(-1, 2)
 
-        next_position = copy(self.position)
+        next_position = copy(self._position)
         next_position.x += position_change.x
         next_position.y += position_change.y
 
-        if next_position.x >= self.world.get_width():
+        if next_position.x >= self._world.get_width():
             next_position.x -= 2
         elif next_position.x < 0:
             next_position.x += 2
 
-        if next_position.y >= self.world.get_height():
+        if next_position.y >= self._world.get_height():
             next_position.y -= 2
         elif next_position.y < 0:
             next_position.y += 2
 
-        organism = self.world.check_collision(next_position)
+        organism = self._world.check_collision(next_position)
 
         if (
             organism is not None
-            and organism.get_strength() <= self.strength
-            and self.collision(organism) == 1
+            and organism.get_strength() <= self._strength
+            and self._collision(organism) == 1
         ):
-            self.position = next_position
+            self._position = next_position
 
-        if self.delay > 0:
-            self.delay -= 1
+        if self._delay > 0:
+            self._delay -= 1
 
-    def multiply(self):
-        free_position = self.find_free_pos(self.position)
+    def _multiply(self):
+        free_position = self._find_free_pos(self._position)
         if free_position is not None:
-            self.world.add_organism(Fox(free_position, self.world))
+            self._world.add_organism(Fox(free_position, self._world))
 
-    def check_type(self, attacker: Organism) -> bool:
+    def _check_type(self, attacker: Organism) -> bool:
         if isinstance(attacker, Fox):
             return True
         else:

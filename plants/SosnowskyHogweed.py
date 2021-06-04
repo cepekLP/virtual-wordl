@@ -1,6 +1,7 @@
 import random
 from typing import TYPE_CHECKING
 
+from Organism import Organism
 from Animal import Animal
 import animals.CyberSheep as CS
 from Plant import Plant, PLANT_DELAY, PLANT_CHANCE_TO_MULTIPLY
@@ -24,25 +25,30 @@ class SosnowskyHogweed(Plant):
         for i in range(-1, 2):
             for j in range(-1, 2):
                 if i != 0 and j != 0:
-                    organism = self.world.check_collision(
-                        Point(self.position.x + i, self.position.y + j)
+                    organism = self._world.check_collision(
+                        Point(self._position.x + i, self._position.y + j)
                     )
                     if (
                         organism is not None
                         and isinstance(organism, Animal)
                         and not isinstance(organism, CS.CyberSheep)
                     ):
-                        self.world.remove_organism(organism)
+                        self._world.remove_organism(organism)
 
-        if random.random() < PLANT_CHANCE_TO_MULTIPLY and self.delay == 0:
-            self.multiply()
-            self.delay = PLANT_DELAY
-        elif self.delay > 0:
-            self.delay = self.delay - 1
+        if random.random() < PLANT_CHANCE_TO_MULTIPLY and self._delay == 0:
+            self._multiply()
+            self._delay = PLANT_DELAY
+        elif self._delay > 0:
+            self._delay = self._delay - 1
 
-    def multiply(self) -> None:
-        free_position = self.find_free_pos(self.position)
+    def special_trait(self, attacker: Organism) -> bool:
+        self._world.remove_organism(self)
+        self._world.remove_organism(attacker)
+        return True
+
+    def _multiply(self) -> None:
+        free_position = self._find_free_pos(self._position)
         if free_position is not None:
-            self.world.add_organism(
-                SosnowskyHogweed(free_position, self.world)
+            self._world.add_organism(
+                SosnowskyHogweed(free_position, self._world)
             )

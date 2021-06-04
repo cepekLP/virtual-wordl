@@ -25,17 +25,17 @@ class CyberSheep(Animal):
         return "GUI/images/cybersheep.jpg"
 
     def action(self) -> None:
-        next_position = copy(self.position)
+        next_position = copy(self._position)
 
         if self.destination is None or (
-            self.destination.x == self.position.x
-            and self.destination.y == self.position.y
+            self.destination.x == self._position.x
+            and self.destination.y == self._position.y
         ):
             self.destination = self.find_destination()
 
         if self.destination is not None:
-            x_diff = self.destination.x - self.position.x
-            y_diff = self.destination.y - self.position.y
+            x_diff = self.destination.x - self._position.x
+            y_diff = self.destination.y - self._position.y
             if x_diff > 0:
                 next_position.x += 1
             elif x_diff < 0:
@@ -54,33 +54,33 @@ class CyberSheep(Animal):
             next_position.x += position_change.x
             next_position.y += position_change.y
 
-            if next_position.x >= self.world.get_width():
+            if next_position.x >= self._world.get_width():
                 next_position.x -= 2
             elif next_position.x < 0:
                 next_position.x += 2
 
-            if next_position.y >= self.world.get_height():
+            if next_position.y >= self._world.get_height():
                 next_position.y -= 2
             elif next_position.y < 0:
                 next_position.y += 2
 
-        organism = self.world.check_collision(next_position)
+        organism = self._world.check_collision(next_position)
 
         if organism is not None:
-            if self.collision(organism) == 1:
-                self.position = next_position
+            if self._collision(organism) == 1:
+                self._position = next_position
         else:
-            self.position = next_position
+            self._position = next_position
 
-        if self.delay > 0:
-            self.delay -= 1
+        if self._delay > 0:
+            self._delay -= 1
 
-    def multiply(self) -> None:
-        free_position = self.find_free_pos(self.position)
+    def _multiply(self) -> None:
+        free_position = self._find_free_pos(self._position)
         if free_position is not None:
-            self.world.add_organism(CyberSheep(free_position, self.world))
+            self._world.add_organism(CyberSheep(free_position, self._world))
 
-    def check_type(self, attacker: Organism) -> bool:
+    def _check_type(self, attacker: Organism) -> bool:
         if isinstance(attacker, CyberSheep):
             return True
         else:
@@ -94,12 +94,13 @@ class CyberSheep(Animal):
 
         destination: Union[Point, None] = None
         max_dist: float = distance(
-            Point(0, 0), Point(self.world.get_width(), self.world.get_height())
+            Point(0, 0),
+            Point(self._world.get_width(), self._world.get_height()),
         )
-        organisms = self.world.get_organism_list()
+        organisms = self._world.get_organism_list()
         for organism in organisms:
             if isinstance(organism, SH.SosnowskyHogweed):
-                dist = distance(self.position, organism.get_position())
+                dist = distance(self._position, organism.get_position())
                 if dist < max_dist:
                     max_dist = dist
                     destination = organism.get_position()
